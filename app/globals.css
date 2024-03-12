@@ -76,7 +76,7 @@ body {
 }
 
 .primary-text-gradient {
-  background: linear-gradient(129deg, #0984e3 0%, #74b9ff 100%);
+  background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -125,7 +125,7 @@ code {
   hyphens: auto;
 
   padding: 2px;
-  color: #0984e3 !important;
+  color: #ff7000 !important;
 }
 
 .markdown pre {
@@ -144,7 +144,7 @@ code {
 
 /* Clerk */
 .cl-internal-b3fm6y {
-  background: linear-gradient(129deg, #0984e3 0%, #74b9ff 100%) !important;
+  background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%) !important;
 }
 
 .hash-span {
