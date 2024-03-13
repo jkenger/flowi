@@ -21,12 +21,23 @@ import { FileSpreadsheet } from 'lucide-react';
 import Image from 'next/image';
 import { createQuestion } from '@/lib/actions/question.action';
 
+import {useRouter, usePathname} from "next/navigation"
+import mongoose from 'mongoose';
+import { revalidatePath } from 'next/cache';
+
 
 const type: any = "create";
 
-const Question = () => {
+interface QuestionProps {
+  mongoUserId: string;
+}
+
+const Question = ({ mongoUserId }: QuestionProps) => {
   const editorRef = useRef(null);
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
@@ -36,42 +47,52 @@ const Question = () => {
     },
   });
   async function onSubmit(values: z.infer<typeof QuestionSchema>) {
+    setIsSubmitting(true);
+    try {
 
-    setIsSubmitting(true)
-    try{
-      await createQuestion({})
-    }catch(e){
+      // create question
+      await createQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+      });
 
-    }finally{
-      setIsSubmitting(false)
+      // redirect to question page
+      router.push(`/`);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
-  function handleTagRemove(tag: string, field: any){
-    const tags = field.value.filter((t: string) => t !== tag)
-    form.setValue("tags", tags)
+  function handleTagRemove(tag: string, field: any) {
+    const tags = field.value.filter((t: string) => t !== tag);
+    form.setValue("tags", tags);
   }
 
-  function handleInputKeyDown(e: React.KeyboardEvent<HTMLInputElement>, field: any){
-    if(e.key === "Enter" && field.name === "tags"){
-      e.preventDefault()
-      const tagInput = e.target as HTMLInputElement
-      const tagValue = tagInput.value.trim()
-      
-      if(tagValue !== ""){
-        if(tagValue.length > 15){
+  function handleInputKeyDown(
+    e: React.KeyboardEvent<HTMLInputElement>,
+    field: any
+  ) {
+    if (e.key === "Enter" && field.name === "tags") {
+      e.preventDefault();
+      const tagInput = e.target as HTMLInputElement;
+      const tagValue = tagInput.value.trim();
+
+      if (tagValue !== "") {
+        if (tagValue.length > 15) {
           return form.setError("tags", {
             type: "required",
-            message: "Tag must not exceed 15 characters"
-          })
+            message: "Tag must not exceed 15 characters",
+          });
         }
 
         if (!field.value.includes(tagValue as never)) {
           form.setValue("tags", [...field.value, tagValue]);
-          tagInput.value = ""
-          form.clearErrors("tags")
-        }else{
-          form.trigger()
+          tagInput.value = "";
+          form.clearErrors("tags");
+        } else {
+          form.trigger();
         }
       }
     }
@@ -233,6 +254,6 @@ const Question = () => {
       </form>
     </Form>
   );
-}
+};
 
 export default Question
