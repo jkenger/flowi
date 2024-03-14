@@ -4,12 +4,14 @@ import Question from "@/app/database/question.model";
 import { connectToDatabase } from "../mongoose"
 import Tag from "@/app/database/tag.model";
 import { revalidatePath } from "next/cache";
+import { CreateQuestionParams, GetQuestionsParams } from "./shared.types";
+import User from "@/app/database/user.model";
 
-export async function createQuestion(values: any) {
+export async function createQuestion(params: CreateQuestionParams) {
   try {
     connectToDatabase();
     
-    const { title, content, tags, author, path } = values;
+    const { title, content, tags, author, path } = params;
 
     const question = await Question.create({
       title,
@@ -28,23 +30,27 @@ export async function createQuestion(values: any) {
         {$setOnInsert: {name: tag}, $push: {questions: question._id}},
         {upsert: true, new: true}
       )
-
       tagDocuments.push(existingTag)
-
       await Question.findByIdAndUpdate(question._id, {$push: {tags: existingTag._id}})
-      revalidatePath("/");
     }
-
-
+  revalidatePath("/");
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function getAllQuestions(){
+export async function getQuestions(param: GetQuestionsParams){
   try{
     connectToDatabase();
-    const questions = await Question.find().populate("tags").populate("author");
+    const questions = await Question.find().populate({
+      path: "tags",
+      model: Tag
+    }).populate({
+      path: "author",
+      model: User
+    }).sort({
+      createdAt: -1
+    });
     return questions;
   }catch(e){
     console.log(e)

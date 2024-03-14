@@ -4,13 +4,13 @@ import QuestionCard from "@/components/shared/QuestionCard";
 import LocalSearchBar from "@/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters, QuestionFilters } from "@/constants/filter";
-import { getAllQuestions } from "@/lib/actions/question.action";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 import React from "react";
 
 
 const Home = async () => {
-  const Questions = await getAllQuestions();
+  const questions = await getQuestions({});
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -41,8 +41,8 @@ const Home = async () => {
         containerClasses="hidden md:flex mt-8"
       />
       <div className="flex flex-col pt-8 gap-6">
-        {Questions?.length || -1 > 0 ? (
-          Questions?.map((question) => (
+        {questions?.length || -1 > 0 ? (
+          questions?.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
