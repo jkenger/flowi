@@ -39,6 +39,7 @@ const QuestionCard = ({
   createdAt,
   views, upvotes, answers,
 }: CustomQuestionProps) => {
+  console.log(author);
   return (
     <div className="flex flex-col gap-3 background-light800_darkgradient p-8 rounded-lg">
       <h3 className="h3-semibold text-dark300_light900">{title}</h3>
