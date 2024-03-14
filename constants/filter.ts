@@ -19,6 +19,13 @@ export const QuestionFilters = [
   { name: "Most Answered", value: "most_answered" },
 ];
 
+export const CommunityFilters = [
+  // New Users, Old Users, Top Contributers
+  { name: "New Users", value: "new_users" },
+  { name: "Old Users", value: "old_users" },
+  { name: "Top Contributors", value: "top_contributors" },
+]
+
 export const TagFilters = [
   { name: "Popular", value: "popular" },
   { name: "Recent", value: "recent" },
