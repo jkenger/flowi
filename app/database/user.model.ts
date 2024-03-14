@@ -19,7 +19,7 @@ const UserSchema = new Schema<IUser>({
   clerkId: { type: String, required: true },
   name: { type: String, required: true },
   userName: { type: String, required: true },
-  password: { type: String, required: true },
+  password: { type: String },
   bio: { type: String },
   avatar: { type: String, required: true },
   location: { type: String },
