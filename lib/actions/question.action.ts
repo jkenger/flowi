@@ -33,7 +33,7 @@ export async function createQuestion(params: CreateQuestionParams) {
       tagDocuments.push(existingTag)
       await Question.findByIdAndUpdate(question._id, {$push: {tags: existingTag._id}})
     }
-  revalidatePath("/");
+    revalidatePath("/");
   } catch (error) {
     console.log(error)
   }

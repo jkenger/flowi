@@ -66,3 +66,16 @@ export async function deleteUser(params: DeleteUserParams) {
   }
 }
 
+export const getUsers = async (params: any) => {
+  try {
+    connectToDatabase();
+
+    const {page = 1, pageSize = 20, filter, searchQuery} = params
+    
+    const users = await User.find({}).sort({createdAt: -1});
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
