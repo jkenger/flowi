@@ -1,4 +1,4 @@
-"use client"
+
 
 import React from 'react'
 import {
@@ -14,6 +14,7 @@ import { Button } from '../../ui/button'
 import { sidebarLinks } from '@/constants'
 import { usePathname } from 'next/navigation'
 const NavContent = ({src = "mobile"}) => {
+  "use client"
   const pathname = usePathname()
   return (
     <section className="flex h-full flex-col gap-6 pt-16">

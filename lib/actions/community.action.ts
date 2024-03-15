@@ -1,3 +1,4 @@
+"use server"
 import User from "@/app/database/user.model"
 import { connectToDatabase } from "../mongoose"
 import Tag from "@/app/database/tag.model"

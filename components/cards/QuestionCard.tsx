@@ -3,6 +3,8 @@ import Tag from '../ui/tag'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from 'next/image';
 import { formatNumber, getTimestamp } from '@/lib/utils';
+import Link from 'next/link';
+import { Stat } from '../shared/Stat';
 
 
 type CustomQuestionProps = {
@@ -13,6 +15,7 @@ type CustomQuestionProps = {
       name: string,
     }[],
     author: {
+      clerkId: string,
       name: string,
       avatar: string,
     },
@@ -21,18 +24,10 @@ type CustomQuestionProps = {
     upvotes: number,
     createdAt: Date,
 }
-const Stat = ({icon, value, label, containerClasses, otherClasses}: {icon: string, value: number, label: string, containerClasses?: string, otherClasses?: string}) => {
-  return (
-    <div className={`flex gap-1 items-center ${containerClasses}`}>
-      <Image alt="Stat Icon" src={icon} width={16} height={16} />
-      <span className={`text-dark400_light800 small-medium ${otherClasses}`}>
-        {formatNumber(value)} {label}{" "}
-      </span>
-    </div>
-  );
-}
+
 
 const QuestionCard = ({
+  _id,
   tags = [],
   title = "The Lightning Component",
   author,
@@ -42,10 +37,14 @@ const QuestionCard = ({
   console.log(author);
   return (
     <div className="flex flex-col gap-3 background-light800_darkgradient p-8 rounded-lg">
-      <h3 className="h3-semibold text-dark300_light900">{title}</h3>
+      <Link href={`/question/${_id}`} className="h3-bold text-dark300_light900">
+        {title}
+      </Link>
       <div className="flex gap-2">
         {tags.map((tag) => (
-          <Tag key={tag?._id} title={tag?.name} />
+          <Link href={`/tags/${tag._id}`} key={tag._id}>
+            <Tag title={tag?.name} />
+          </Link>
         ))}
       </div>
       <div className="flex flex-col gap-2 md:flex-row justify-between mt-4">
@@ -54,12 +53,14 @@ const QuestionCard = ({
             <AvatarImage src={author?.avatar} />
             <AvatarFallback>IMG</AvatarFallback>
           </Avatar>
-          <span className="body-medium text-dark400_light800">
+          <Link href={`/profile/${author?.clerkId}`}>
+            <span className="body-medium text-dark400_light800">
             {author?.name || "Ken Gervacio"}{" "}
             <span className="small-regular text-dark400_light800">
               • {getTimestamp(createdAt) || "1 day ago"}
             </span>
           </span>
+          </Link>
         </div>
         <div className="flex gap-2">
           <Stat
