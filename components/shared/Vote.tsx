@@ -31,14 +31,13 @@ const Vote = ({source="question", questionId, userId, type = "upvote", votes = 0
   }
 
   return (
-    <div className="flex items-center" onClick={() => handleVote(type === "upvote" ? upvoteQuestion : downvoteQuestion)}>
+    <div className="flex items-center cursor-pointer" onClick={() => handleVote(type === "upvote" ? upvoteQuestion : downvoteQuestion)}>
       {hasVoted ? (
         <Image
           src={`/assets/icons/${type}d.svg`}
           width={20}
           height={20}
           alt={type}
-          className="cursor-pointer"
         />
       ) : (
         <Image
@@ -46,7 +45,6 @@ const Vote = ({source="question", questionId, userId, type = "upvote", votes = 0
           width={20}
           height={20}
           alt={type}
-          className="cursor-pointer"
         />
       )}
       <span className="small-regular text-dark400_light800 ml-1 background-light800_dark300 px-1.5 py-1 rounded-sm">

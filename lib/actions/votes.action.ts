@@ -19,23 +19,25 @@ export async function upvoteQuestion(params: any){
 
     
     connectToDatabase();
+    let query = {}
     if(hasupVoted) {
-      await Question.findByIdAndUpdate(questionId, {
+      query = {
         $pull: {
           upvotes: userId,
         },
-      })
+      };
+      
     }else {
-      await Question.findByIdAndUpdate(questionId, {
+      query = {
         $addToSet: {
           upvotes: userId,
         },
         $pull: {
           downvotes: userId,
         },
-      });
+      };
     }
-    
+    await Question.findByIdAndUpdate(questionId, query);
     revalidatePath(path);
   }catch(e)
   {
@@ -45,26 +47,26 @@ export async function upvoteQuestion(params: any){
 
 export async function downvoteQuestion(params: any){
   const {userId, questionId, path, hasdownVoted} = params;
-  console.log(params)
+  let query = {};
   try{
     connectToDatabase();
     if (hasdownVoted) {
-      await Question.findByIdAndUpdate(questionId, {
+      query = {
         $pull: {
           downvotes: userId,
         },
-      });
+      };
     } else {
-      await Question.findByIdAndUpdate(questionId, {
+      query = {
         $addToSet: {
           downvotes: userId,
         },
         $pull: {
           upvotes: userId,
         },
-      });
+      }
     }
-      
+    await Question.findByIdAndUpdate(questionId, query);
 
     revalidatePath(path);
   }catch(e){
