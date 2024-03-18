@@ -1,6 +1,6 @@
 "use client"
 
-import {  voteQuestion } from '@/lib/actions/votes.action';
+import {  downvoteQuestion, upvoteQuestion } from '@/lib/actions/votes.action';
 import Image from 'next/image'
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react'
@@ -19,19 +19,19 @@ const Vote = ({source="question", questionId, userId, type = "upvote", votes = 0
   const pathname = usePathname();
   
 
-  async function handleVote(){
-    const voteResult = await voteQuestion({
+  async function handleVote(vote: any){
+    const voteResult = await vote({
       questionId: JSON.parse(questionId),
-      userId: JSON.parse(userId), 
+      userId: JSON.parse(userId),
       hasupVoted: type === "upvote" ? hasVoted : false,
-      hasdownVoted: type === "downvote" ? hasVoted : false,
+      hasdownVoted: type === "downvote" ? hasVoted : false, 
       path: pathname,
     });
     console.log(voteResult) 
   }
 
   return (
-    <div className="flex items-center" onClick={() => handleVote()}>
+    <div className="flex items-center" onClick={() => handleVote(type === "upvote" ? upvoteQuestion : downvoteQuestion)}>
       {hasVoted ? (
         <Image
           src={`/assets/icons/${type}d.svg`}
