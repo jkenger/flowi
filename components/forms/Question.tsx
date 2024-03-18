@@ -17,13 +17,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { QuestionSchema } from '@/lib/validation';
-import { FileSpreadsheet } from 'lucide-react';
 import Image from 'next/image';
 import { createQuestion } from '@/lib/actions/question.action';
 
 import {useRouter, usePathname} from "next/navigation"
-import mongoose from 'mongoose';
-import { revalidatePath } from 'next/cache';
+import { useTheme } from '@/context/ThemeProvider';
 
 
 const type: any = "create";
@@ -33,6 +31,7 @@ interface QuestionProps {
 }
 
 const Question = ({ mongoUserId }: QuestionProps) => {
+  const {mode} = useTheme()
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -178,6 +177,8 @@ const Question = ({ mongoUserId }: QuestionProps) => {
                       "alignright alignjustify | bullist numlist " +
                       "removeformat | help",
                     content_style: "body { font-family:Inter; font-size:16px }",
+                    skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    content_css: mode === "dark" ? "dark" : "default",
                   }}
                 />
               </FormControl>

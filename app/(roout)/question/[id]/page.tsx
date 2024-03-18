@@ -1,6 +1,15 @@
+
+import Answer from '@/components/forms/Answer'
+import Answers from '@/components/shared/Answers'
+import ParseHTML from '@/components/shared/ParseHTML'
+import Save from '@/components/shared/Save'
 import { Stat } from '@/components/shared/Stat'
-import { getQuestionById } from '@/lib/actions/question.action'
+import Vote from '@/components/shared/Vote'
+import Tag from '@/components/ui/tag'
+import { getAnswers, getQuestionById } from '@/lib/actions/question.action'
+import { getUserById } from '@/lib/actions/user.action'
 import { getTimestamp } from '@/lib/utils'
+import { currentUser, useAuth } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -14,6 +23,8 @@ type QuestionDetailProps = {
 const QuestionDetail = async ({params}: QuestionDetailProps) => {
   const { id } = params;
   const question = await getQuestionById({ questionId: id });
+  const clerkUser = await currentUser()
+  const user = await getUserById({ userId: clerkUser?.id });
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -33,7 +44,27 @@ const QuestionDetail = async ({params}: QuestionDetailProps) => {
               {question.author.name}
             </p>
           </Link>
-          <div className="flex-justify-end">Voting</div>
+          <div className="flex-justify-end">
+            <div className="flex gap-2">
+              <Vote
+                userId={JSON.stringify(user._id)}
+                questionId={JSON.stringify(id)}
+                source="question"
+                type="upvote"
+                votes={question.upvotes.length}
+                hasVoted={question.upvotes.includes(user._id)}
+              />
+              <Vote
+                userId={JSON.stringify(user._id)}
+                questionId={JSON.stringify(id)}
+                source="question"
+                type="downvote"
+                votes={question.downvotes.length}
+                hasVoted={question.downvotes.includes(user._id)}
+              />
+              <Save hasSaved={user.saved.includes(id)} />
+            </div>
+          </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
           {question.title}
@@ -56,6 +87,22 @@ const QuestionDetail = async ({params}: QuestionDetailProps) => {
           label="Views"
         />
       </div>
+
+      <ParseHTML data={question?.content} />
+
+      <div className="mt-8 flex flex-wrap gap-2">
+        {question?.tags.map((tag: any) => (
+          <Tag title={tag.name} key={tag.id} />
+        ))}
+      </div>
+
+      <Answers
+        questionId={JSON.stringify(question._id)}
+        mongoUser={user}
+        totalAnswers={question.answers.length}
+      />
+
+      <Answer questionId={id} mongoUserId={JSON.stringify(user._id)} />
     </>
   );
 }

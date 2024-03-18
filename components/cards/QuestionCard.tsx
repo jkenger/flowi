@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { formatNumber, getTimestamp } from '@/lib/utils';
 import Link from 'next/link';
 import { Stat } from '../shared/Stat';
+import { IAnswer } from '@/app/database/answer.model';
 
 
 type CustomQuestionProps = {
@@ -20,7 +21,7 @@ type CustomQuestionProps = {
       avatar: string,
     },
     views: number,
-    answers: number,
+    answers: IAnswer[],
     upvotes: number,
     createdAt: Date,
 }
@@ -70,7 +71,7 @@ const QuestionCard = ({
           />
           <Stat
             icon="/assets/icons/message.svg"
-            value={answers || 0}
+            value={answers.length || 0}
             label="Answers"
           />
           <Stat icon="/assets/icons/eye.svg" value={views || 0} label="Views" />

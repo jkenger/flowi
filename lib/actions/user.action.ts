@@ -2,9 +2,10 @@
 
 import User from "@/app/database/user.model";
 import { connectToDatabase } from "../mongoose"
-import { DeleteUserParams, UpdateUserParams } from "./shared.types";
+import { CreateAnswerParams, DeleteUserParams, UpdateUserParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/app/database/question.model";
+import Answer from "@/app/database/answer.model";
 
 export async function getUserById(params: any){
   try{
@@ -78,4 +79,25 @@ export const getUsers = async (params: any) => {
     console.log(error);
   }
 };
+
+export const createAnswer = async (params: CreateAnswerParams) => {
+  try {
+    connectToDatabase();
+    const {question, author, content, path} = params;
+    const answer = await Answer.create({
+      content,
+      author,
+      question,
+      path,
+    });
+    await Question.findOneAndUpdate(
+      { _id: question },
+      { $push: { answers: answer._id } },
+      { new: true }
+    );
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+  }
+}
 

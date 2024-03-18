@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../styles/prism.css"
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/context/ThemeProvider";
+
 
 const inter = Inter({
   subsets: ["latin"],
