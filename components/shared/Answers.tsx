@@ -1,7 +1,7 @@
 import React from 'react'
 import { FilterSelect } from './Filter';
 import { AnswerFilters } from '@/constants/filter';
-import { getAnswers } from '@/lib/actions/question.action';
+import { getAnswers } from "@/lib/actions/answer.action";
 import ParseHTML from './ParseHTML';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Link from 'next/link';
