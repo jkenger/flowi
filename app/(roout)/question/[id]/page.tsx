@@ -1,4 +1,5 @@
 
+import Question from '@/app/database/question.model'
 import Answer from '@/components/forms/Answer'
 import Answers from '@/components/shared/Answers'
 import ParseHTML from '@/components/shared/ParseHTML'
@@ -47,16 +48,18 @@ const QuestionDetail = async ({params}: QuestionDetailProps) => {
           <div className="flex-justify-end">
             <div className="flex gap-2">
               <Vote
+                mongoModel="Question"
                 userId={JSON.stringify(user._id)}
-                questionId={JSON.stringify(id)}
+                id={JSON.stringify(id)}
                 source="question"
                 type="upvote"
                 votes={question.upvotes.length}
                 hasVoted={question.upvotes.includes(user._id)}
               />
               <Vote
+                mongoModel="Question"
                 userId={JSON.stringify(user._id)}
-                questionId={JSON.stringify(id)}
+                id={JSON.stringify(id)}
                 source="question"
                 type="downvote"
                 votes={question.downvotes.length}

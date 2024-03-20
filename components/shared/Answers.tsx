@@ -49,17 +49,19 @@ const Answers = async ({questionId, totalAnswers, mongoUser}: IAnswersProps) => 
               </div>
               <div className="flex gap-2">
                 <Vote
+                  id={JSON.stringify(answer._id)}
+                  mongoModel="Answer"
                   userId={JSON.stringify(mongoUser._id)}
-                  questionId={JSON.stringify(questionId)}
-                  source="question"
+                  source="answer"
                   type="upvote"
                   votes={answer.upvotes.length}
                   hasVoted={answer.upvotes.includes(mongoUser._id)}
                 />
                 <Vote
+                  id={JSON.stringify(answer._id)}
+                  mongoModel="Answer"
                   userId={JSON.stringify(mongoUser._id)}
-                  questionId={JSON.stringify(questionId)}
-                  source="question"
+                  source="answer"
                   type="downvote"
                   votes={answer.downvotes.length}
                   hasVoted={answer.downvotes.includes(mongoUser._id)}

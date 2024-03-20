@@ -1,4 +1,4 @@
-import { Question } from '@/app/database/question.model';
+import Question from '@/app/database/question.model';
 import { connectToDatabase } from './../mongoose';
 import { GetAnswersParams } from './shared.types.d';
 export async function getAnswers(params: GetAnswersParams) {
@@ -28,3 +28,4 @@ export async function getAnswers(params: GetAnswersParams) {
     console.log(e);
   }
 }
+

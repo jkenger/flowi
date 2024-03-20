@@ -6,28 +6,36 @@ import { connectToDatabase } from "../mongoose";
 import { QuestionVoteParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import User from "@/app/database/user.model";
+import { Model } from "mongoose";
+import Answer from "@/app/database/answer.model";
 
-// questionId: string;
-// userId: string;
-// hasupVoted: boolean;
-// hasdownVoted: boolean;
-// path: string;
+interface IVoteParams {
+  userId: string;
+  id: string;
+  path: string;
+  hasupVoted?: boolean;
+  hasdownVoted?: boolean;
+  mongoModel: string;
+}
 
-export async function upvoteQuestion(params: any){
-  const {userId, questionId, path, hasupVoted} = params;
-  try{
+const Models = {
+  Question: Question,
+  Answer: Answer,
+}
 
-    
+export async function upvote(params: IVoteParams) {
+  const { userId, id, path, hasupVoted, mongoModel } = params;
+  console.log(mongoModel)
+  try {
     connectToDatabase();
-    let query = {}
-    if(hasupVoted) {
+    let query = {};
+    if (hasupVoted) {
       query = {
         $pull: {
           upvotes: userId,
         },
       };
-      
-    }else {
+    } else {
       query = {
         $addToSet: {
           upvotes: userId,
@@ -37,18 +45,17 @@ export async function upvoteQuestion(params: any){
         },
       };
     }
-    await Question.findByIdAndUpdate(questionId, query);
+    await (Models as any)[mongoModel].findByIdAndUpdate(id, query);
     revalidatePath(path);
-  }catch(e)
-  {
-    console.log(e)
+  } catch (e) {
+    console.log(e);
   }
 }
 
-export async function downvoteQuestion(params: any){
-  const {userId, questionId, path, hasdownVoted} = params;
+export async function downvote(params: IVoteParams) {
+  const { mongoModel, userId, id, path, hasdownVoted } = params;
   let query = {};
-  try{
+  try {
     connectToDatabase();
     if (hasdownVoted) {
       query = {
@@ -64,12 +71,12 @@ export async function downvoteQuestion(params: any){
         $pull: {
           upvotes: userId,
         },
-      }
+      };
     }
-    await Question.findByIdAndUpdate(questionId, query);
+    await (Models as any)[mongoModel].findByIdAndUpdate(id, query);
 
     revalidatePath(path);
-  }catch(e){
-    console.log(e)
+  } catch (e) {
+    console.log(e);
   }
 }
