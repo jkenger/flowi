@@ -4,7 +4,7 @@ import Question from "@/app/database/question.model";
 import { connectToDatabase } from "../mongoose"
 import Tag from "@/app/database/tag.model";
 import { revalidatePath } from "next/cache";
-import { CreateQuestionParams, GetAnswersParams, GetQuestionByIdParams, GetQuestionsParams } from "./shared.types";
+import { CreateQuestionParams, GetAnswersParams, GetQuestionByIdParams, GetQuestionsParams, ToggleSaveQuestionParams } from "./shared.types";
 import User from "@/app/database/user.model";
 
 export async function createQuestion(params: CreateQuestionParams) {
@@ -73,6 +73,30 @@ export async function getQuestionById(params: GetQuestionByIdParams){
   }
   catch(e){
       console.log(e)
+  }
+}
+
+export async function toggleSaveQuestion({
+  questionId,
+  userId,
+  path,
+  hasSaved,
+}: ToggleSaveQuestionParams) {
+  try {
+    connectToDatabase();
+    if (hasSaved) {
+      await User.findByIdAndUpdate(userId, {
+        $pull: { saved: questionId },
+      });
+      revalidatePath(path);
+      return;
+    }
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { saved: questionId },
+    });
+    revalidatePath(path);
+  } catch (e) {
+    console.log(e);
   }
 }
 

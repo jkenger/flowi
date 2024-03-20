@@ -1,11 +1,9 @@
 "use client"
 
-import Question from '@/app/database/question.model';
 import { downvote, upvote } from '@/lib/actions/votes.action';
-import { Model } from 'mongoose';
 import Image from 'next/image'
 import { usePathname } from 'next/navigation';
-import React from 'react'
+import React, { useState } from 'react'
 
 type VoteProps = {
   id: string;
@@ -18,17 +16,19 @@ type VoteProps = {
 };
 
 
+
 const Vote = ({source="question", id, userId, type = "upvote", votes = 0, hasVoted, mongoModel}: VoteProps) => {
   const pathname = usePathname();
-  
+  const hasUpvoted = type === "upvote" ? hasVoted : false;
+  const hasDownvoted = type === "downvote" ? hasVoted : false;
 
   async function handleVote(vote: any){
     const voteResult = await vote({
       mongoModel,
       id: JSON.parse(id),
       userId: JSON.parse(userId),
-      hasupVoted: type === "upvote" ? hasVoted : false,
-      hasdownVoted: type === "downvote" ? hasVoted : false,
+      hasupVoted: hasUpvoted,
+      hasdownVoted: hasDownvoted,
       path: pathname,
     });
     console.log(voteResult) 

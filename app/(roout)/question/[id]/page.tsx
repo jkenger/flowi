@@ -65,7 +65,11 @@ const QuestionDetail = async ({params}: QuestionDetailProps) => {
                 votes={question.downvotes.length}
                 hasVoted={question.downvotes.includes(user._id)}
               />
-              <Save hasSaved={user.saved.includes(id)} />
+              <Save 
+                questionId={JSON.stringify(question._id)} 
+                userId={JSON.stringify(user._id)} 
+                hasSaved={user.saved.includes(id)} 
+                />
             </div>
           </div>
         </div>
